@@ -12,33 +12,10 @@ module Pod
     end
 
     def perform
-      keep_demo = configurator.ask_with_answers("Would you like to include a demo application with your library", ["Yes", "No"]).to_sym
-
-      framework = configurator.ask_with_answers("Which testing frameworks will you use", ["Quick", "None"]).to_sym
-      case framework
-        when :quick
-          configurator.add_pod_to_podfile "Quick', '~> 2.2.0"
-          configurator.add_pod_to_podfile "Nimble', '~> 8.0.7"
-          configurator.set_test_framework "quick", "swift", "swift"
-
-        when :none
-          configurator.set_test_framework "xctest", "swift", "swift"
-      end
-
-      snapshots = configurator.ask_with_answers("Would you like to do view based testing", ["Yes", "No"]).to_sym
-      case snapshots
-        when :yes
-          configurator.add_pod_to_podfile "FBSnapshotTestCase' , '~> 2.1.4"
-
-          if keep_demo == :no
-              puts " Putting demo application back in, you cannot do view tests without a host application."
-              keep_demo = :yes
-          end
-
-          if framework == :quick
-              configurator.add_pod_to_podfile "Nimble-Snapshots' , '~> 8.0.0"
-          end
-      end
+      keep_demo = :yes
+      framework = :none
+      #  配置测试
+      configurator.set_test_framework "xctest", "swift", "swift"
 
       Pod::ProjectManipulator.new({
         :configurator => @configurator,
@@ -50,9 +27,13 @@ module Pod
 
       # There has to be a single file in the Classes dir
       # or a framework won't be created
-      `touch Pod/Classes/ReplaceMe.swift`
+      # `touch Pod/Classes/ReplaceMe.swift`
 
       `mv ./templates/swift/* ./`
+      `mv ./templates/script ./`
+      `mv ./templates/.gitignore ./`
+
+      `sed -i '' '3,3s/""/"#{configurator.pod_name}"/g' ./script/submit.sh`
 
       # remove podspec for osx
       `rm ./NAME-osx.podspec`
