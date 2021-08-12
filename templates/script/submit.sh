@@ -2,9 +2,8 @@
 
 PROJ=""
 POD_SPEC="${PROJ}.podspec"
-POD_REPO="unipets"
+POD_REPO="nehza"
 VERSION=$1
-COMPANY="Shenzhen Xiaomeng Pet Technology Co., Ltd"
 
 
 echo "==> 准备提交 $PROJ 工程, 版本号：$VERSION"
