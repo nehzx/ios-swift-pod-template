@@ -8,7 +8,7 @@ VERSION=$1
 
 echo "==> 准备提交 $PROJ 工程, 版本号：$VERSION"
 
-if [ ! -n $VERSION ]
+if [ ! -n "$VERSION" ]
 then
 	echo "$0 [ERROR] 缺少 version 参数"
 	exit 0
